@@ -30,9 +30,9 @@ class _HomeState extends State<Home> {
   ];
 
   List<BoxWidget> boxWidgets = const [
-    BoxWidget(title: "LIVING ROOM",temp: "26C", humid: "50%", img: "assets/images/living_room.jpg"),
-    BoxWidget(title: "BED ROOM",temp: "22C", humid: "30%", img: "assets/images/bed_room.jpg"),
-    BoxWidget(title: "KITCHEN ROOM",temp: "22C", humid: "40%", img: "assets/images/kitchen_room.jpg")
+    BoxWidget(title: "LIVING ROOM",temp: "26\u2103", humid: "50%", img: "assets/images/living_room.jpg"),
+    BoxWidget(title: "BED ROOM",temp: "22\u2103", humid: "30%", img: "assets/images/bed_room.jpg"),
+    BoxWidget(title: "KITCHEN ROOM",temp: "22\u2103", humid: "40%", img: "assets/images/kitchen_room.jpg")
   ];
 
   List<Items> items = [
