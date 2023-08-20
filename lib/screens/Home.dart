@@ -89,7 +89,6 @@ class _HomeState extends State<Home> {
                     },
                     itemCount: 3,
                     pagination: const SwiperPagination(),
-                    control: const SwiperControl(),
                   ),
                 ),
                 Container(
