@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "999666096093",
+    "project_id": "smart-farm-0",
+    "storage_bucket": "smart-farm-0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999666096093:android:b0e8ebf1a9a2be4b2d0834",
+        "android_client_info": {
+          "package_name": "com.example.workplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999666096093-8ibttf847vn7tpjffaft266kjm0u2r45.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.workplace",
+            "certificate_hash": "aba4b09fefbcf733ac8e262621641127ba1341db"
+          }
+        },
+        {
+          "client_id": "999666096093-8q9vk6bivh3l5h96ggggfhfpbmp78bek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxI8_zgHZrky6KLRI08hRiNrbJM9cYFg0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999666096093-8q9vk6bivh3l5h96ggggfhfpbmp78bek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

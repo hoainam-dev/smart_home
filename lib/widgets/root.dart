@@ -40,14 +40,13 @@ class _RootState extends State<Root> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.green.shade800,
-        accentColor: Colors.orange,
       ),
       home: Scaffold(
         body: screens[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: onTabTapped,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
