@@ -35,7 +35,6 @@ class _RootState extends State<Root> {
       Home(),
       Settings(),
     ];
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
