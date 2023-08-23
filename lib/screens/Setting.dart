@@ -1,15 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workplace/auth/Auth.dart';
+import 'package:workplace/screens/Auth/Login.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+class SettingScreen extends StatefulWidget {
+  const SettingScreen({Key? key}) : super(key: key);
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<SettingScreen> createState() => _SettingScreenState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingScreenState extends State<SettingScreen> {
   bool _isDark = false;
+
+  final User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -61,15 +67,40 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
                 const Divider(),
-                const _SingleSection(
+                _SingleSection(
                   children: [
-                    _CustomListTile(
+                    const _CustomListTile(
                         title: "Help & Feedback",
                         icon: Icons.help_outline_rounded),
-                    _CustomListTile(
-                        title: "About", icon: Icons.info_outline_rounded),
-                    _CustomListTile(
-                        title: "Sign out", icon: Icons.exit_to_app_rounded),
+                    const _CustomListTile(
+                        title: "About",
+                        icon: Icons.info_outline_rounded),
+                    StreamBuilder<User?>(
+                        stream: FirebaseAuth.instance.authStateChanges(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return _CustomListTile(
+                                title: "Sign out ${user!.email}",
+                                icon: Icons.exit_to_app_rounded,
+                                onTap: () async{
+                                  await Auth.signOut(context: context);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Login()));
+                                    });
+                          } else {
+                            return _CustomListTile(
+                                title: "Sign in",
+                                icon: Icons.exit_to_app_rounded,
+                                onTap: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Login()))
+                                });
+                          }
+                        })
                   ],
                 ),
               ],
@@ -85,8 +116,14 @@ class _CustomListTile extends StatelessWidget {
   final String title;
   final IconData icon;
   final Widget? trailing;
+  final VoidCallback? onTap;
+
   const _CustomListTile(
-      {Key? key, required this.title, required this.icon, this.trailing})
+      {Key? key,
+      required this.title,
+      required this.icon,
+      this.trailing,
+      this.onTap})
       : super(key: key);
 
   @override
@@ -95,7 +132,7 @@ class _CustomListTile extends StatelessWidget {
       title: Text(title),
       leading: Icon(icon),
       trailing: trailing,
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }
@@ -103,6 +140,7 @@ class _CustomListTile extends StatelessWidget {
 class _SingleSection extends StatelessWidget {
   final String? title;
   final List<Widget> children;
+
   const _SingleSection({
     Key? key,
     this.title,
@@ -130,63 +168,3 @@ class _SingleSection extends StatelessWidget {
     );
   }
 }
-
-
-// import 'package:flutter/material.dart';
-//
-// class Settings extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.white,
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           Text("Volume"),
-//           _SimpleSlider(),
-//         ],
-//       )
-//     );
-//   }
-// }
-//
-//
-// class _SimpleSlider extends StatefulWidget {
-//   final Color? thumbColor, activeColor, inactiveColor;
-//   final int? divisions;
-//
-//   const _SimpleSlider(
-//       {Key? key,
-//         this.thumbColor,
-//         this.activeColor,
-//         this.inactiveColor,
-//         this.divisions})
-//       : super(key: key);
-//
-//   @override
-//   __SimpleSliderState createState() => __SimpleSliderState();
-// }
-//
-// class __SimpleSliderState extends State<_SimpleSlider> {
-//   double _currentSliderValue = 20;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Slider(
-//       value: _currentSliderValue,
-//       min: 0,
-//       max: 100,
-//       label: _currentSliderValue.toInt().toString(),
-//       thumbColor: widget.thumbColor,
-//       activeColor: widget.activeColor,
-//       inactiveColor: widget.inactiveColor,
-//       divisions: widget.divisions,
-//       onChanged: (double value) {
-//         setState(() {
-//           _currentSliderValue = value;
-//         });
-//       },
-//     );
-//   }
-// }

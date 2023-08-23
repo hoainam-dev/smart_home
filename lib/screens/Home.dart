@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
     Light(isOn: false),
   ];
 
+  //List Box widget
   List<BoxWidget> boxWidgets = const [
     BoxWidget(
         title: "LIVING ROOM",
@@ -48,6 +49,7 @@ class _HomeState extends State<Home> {
         img: "assets/images/kitchen_room.jpg")
   ];
 
+  //List Icon Light widget
   List<Items> items = [
     Items(
         iconOn: const Icon(
@@ -99,6 +101,7 @@ class _HomeState extends State<Home> {
         name: "LÒ SƯỞI"),
   ];
 
+
   // function toggle the light
   void toggleLight(int index) {
     setState(() {
@@ -124,7 +127,7 @@ class _HomeState extends State<Home> {
             child: Stack(
               children: [
                 Container(
-                  margin: EdgeInsets.fromLTRB(10, 100, 10, 0),
+                  margin: const EdgeInsets.fromLTRB(10, 100, 10, 0),
                   height: 630,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -147,13 +150,13 @@ class _HomeState extends State<Home> {
                       ]),
                 ),
                 Container( //Light Widget
-                  margin: const EdgeInsets.fromLTRB(30, 320, 30, 0),
+                  margin: const EdgeInsets.fromLTRB(30, 320, 30, 10),
                   padding: const EdgeInsets.all(10),
                   child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      mainAxisSpacing: 40.0,
+                      mainAxisSpacing: 30.0,
                       crossAxisSpacing: 40.0,
                     ),
                     itemCount: lights.length,
@@ -169,7 +172,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 Container( //Slide Widget
-                  margin: EdgeInsets.fromLTRB(30, 120, 30, 20),
+                  margin: const EdgeInsets.fromLTRB(30, 120, 30, 20),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -184,9 +187,9 @@ class _HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        offset: Offset(0, 15),
-                        blurRadius: 10,
+                        color: Colors.lightGreen.withOpacity(0.7),
+                        offset: Offset(-4, 4),
+                        blurRadius: 3,
                       ),
                     ],
                   ),
@@ -354,10 +357,10 @@ class LightWidget extends StatelessWidget {
               BoxShadow(
                 color: isOn
                     ? Colors.orange.withOpacity(1)
-                    : Colors.grey.withOpacity(0.5),
+                    : Colors.lightGreen.withOpacity(0.7),
                 spreadRadius: 1,
-                blurRadius: 10,
-                offset: const Offset(5, 5),
+                blurRadius: 3,
+                offset: const Offset(-4, 4),
               ),
             ],
           ),

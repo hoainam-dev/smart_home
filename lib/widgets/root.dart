@@ -33,7 +33,7 @@ class _RootState extends State<Root> {
   Widget build(BuildContext context) {
     List<Widget> screens = [
       Home(),
-      Settings(),
+      SettingScreen(),
     ];
     return MaterialApp(
       debugShowCheckedModeBanner: false,
