@@ -101,23 +101,26 @@ class _HomeState extends State<Home> {
         name: "LÒ SƯỞI"),
   ];
 
+  int _value = 0;
+
   // function toggle the light
   void toggleLight(int index) {
     setState(() {
       lights[index].isOn = !lights[index].isOn;
+      _value = index;
     });
   }
 
-  int _value = 6;
-  double _currentVolume = 0.5;
   bool _showSlider = false;
+
+  List<double> _temps = [0.5, 0.5, 0.5, 0.5];
 
   void _onLongPress(int index) {
     setState(() {
       _showSlider = true;
+      lights[index].isOn = true;
+      _value = index;
     });
-
-    toggleLight(index);
   }
 
   void _onLongPressEnd(LongPressEndDetails details) {
@@ -133,7 +136,7 @@ class _HomeState extends State<Home> {
     final percent = 1 - (offset.dy / box.size.height).clamp(0.0, 1.0);
 
     setState(() {
-      _currentVolume = percent;
+      _temps[_value] = percent;
     });
   }
 
@@ -198,6 +201,7 @@ class _HomeState extends State<Home> {
                         iconOn: items[index].iconOn,
                         iconOff: items[index].iconOff,
                         name: items[index].name,
+                        index: _temps[index],
                       );
                     },
                   ),
@@ -243,7 +247,6 @@ class _HomeState extends State<Home> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       );
-
                       return gradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                       );
@@ -260,11 +263,12 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     if (_showSlider)
                       Container(
-                          height: 200, // Set the height of the slider
+                          margin: EdgeInsets.fromLTRB(10, 0, 10, 20),
+                          height: 55,
                           child: Column(
                             children: [
                               SliderTheme(
@@ -273,21 +277,20 @@ class _HomeState extends State<Home> {
                                   overlayShape: RoundSliderOverlayShape(overlayRadius: 15),
                                 ),
                                 child: Slider(
-                                  value: _currentVolume,
+                                  value: _temps[_value],
                                   onChanged: (newValue) {
                                     setState(() {
-                                      _currentVolume = newValue;
+                                      _temps[_value] = newValue;
                                     });
                                   },
                                   min: 0,
                                   max: 1,
                                 ),
                               ),
-                              SizedBox(height: 20),
                               Text(
-                                '${(_currentVolume * 100).toStringAsFixed(0)}%',
+                                '${(_temps[_value] * 100).toStringAsFixed(0)}%',
                                 style: TextStyle(fontSize: 20),
-                              ),
+                              )
                             ],
                           )
                       ),
@@ -383,6 +386,7 @@ class LightWidget extends StatelessWidget {
   final Icon iconOn;
   final Icon iconOff;
   final String name;
+  final double index;
 
   const LightWidget({
     required this.isOn,
@@ -393,6 +397,7 @@ class LightWidget extends StatelessWidget {
     required this.onLongPress,
     required this.onLongPressEnd,
     required this.onLongPressMoveUpdate,
+    required this.index,
   });
 
   @override
@@ -447,7 +452,14 @@ class LightWidget extends StatelessWidget {
               ),
               isOn ? iconOn : iconOff,
               SizedBox(height: 10),
-              Text(isOn ? 'ON' : 'OFF'),
+              isOn?Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(isOn ? 'ON' : 'OFF'),
+                  SizedBox(width: 10),
+                  Text("${(index* 100).toStringAsFixed(0)}%"),
+                ],
+              ):Text(isOn ? 'ON' : 'OFF'),
             ],
           )),
     );
