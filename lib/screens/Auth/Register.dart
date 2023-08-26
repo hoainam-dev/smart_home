@@ -81,15 +81,15 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.all(40.0),
+                          padding: const EdgeInsets.fromLTRB(40, 0, 40, 40),
                           child: Column(
                             children: [
                               FadeAnimation(
                                 delay: 0.8,
                                 child: Image.asset(
                                   'assets/images/logo.png',
-                                  width: 200,
-                                  height: 100,
+                                  width: 300,
+                                  height: 200,
                                 ),
                               ),
                               const SizedBox(

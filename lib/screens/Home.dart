@@ -101,11 +101,39 @@ class _HomeState extends State<Home> {
         name: "LÒ SƯỞI"),
   ];
 
-
   // function toggle the light
   void toggleLight(int index) {
     setState(() {
       lights[index].isOn = !lights[index].isOn;
+    });
+  }
+
+  int _value = 6;
+  double _currentVolume = 0.5;
+  bool _showSlider = false;
+
+  void _onLongPress(int index) {
+    setState(() {
+      _showSlider = true;
+    });
+
+    toggleLight(index);
+  }
+
+  void _onLongPressEnd(LongPressEndDetails details) {
+    setState(() {
+      _showSlider = false;
+    });
+  }
+
+  void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
+    // Tính toán giá trị âm lượng dựa trên vị trí y của sự kiện
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    final offset = box.globalToLocal(details.globalPosition);
+    final percent = 1 - (offset.dy / box.size.height).clamp(0.0, 1.0);
+
+    setState(() {
+      _currentVolume = percent;
     });
   }
 
@@ -164,6 +192,9 @@ class _HomeState extends State<Home> {
                       return LightWidget(
                         isOn: lights[index].isOn,
                         onTap: () => toggleLight(index),
+                        onLongPress: () => _onLongPress(index),
+                        onLongPressEnd: _onLongPressEnd,
+                        onLongPressMoveUpdate: _onLongPressMoveUpdate,
                         iconOn: items[index].iconOn,
                         iconOff: items[index].iconOff,
                         name: items[index].name,
@@ -227,6 +258,40 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_showSlider)
+                      Container(
+                          height: 200, // Set the height of the slider
+                          child: Column(
+                            children: [
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 10,
+                                  overlayShape: RoundSliderOverlayShape(overlayRadius: 15),
+                                ),
+                                child: Slider(
+                                  value: _currentVolume,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _currentVolume = newValue;
+                                    });
+                                  },
+                                  min: 0,
+                                  max: 1,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                '${(_currentVolume * 100).toStringAsFixed(0)}%',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
+                          )
+                      ),
+                  ],
                 ),
               ],
             )),
@@ -312,7 +377,9 @@ class BoxWidget extends StatelessWidget {
 
 class LightWidget extends StatelessWidget {
   final bool isOn;
-  final VoidCallback onTap;
+  final VoidCallback onTap, onLongPress;
+  final GestureLongPressEndCallback onLongPressEnd;
+  final GestureLongPressMoveUpdateCallback onLongPressMoveUpdate;
   final Icon iconOn;
   final Icon iconOff;
   final String name;
@@ -323,12 +390,18 @@ class LightWidget extends StatelessWidget {
     required this.iconOn,
     required this.iconOff,
     required this.name,
+    required this.onLongPress,
+    required this.onLongPressEnd,
+    required this.onLongPressMoveUpdate,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
+      onLongPressEnd: onLongPressEnd,
+      onLongPressMoveUpdate: onLongPressMoveUpdate,
       child: Container(
           decoration: BoxDecoration(
             gradient: isOn
