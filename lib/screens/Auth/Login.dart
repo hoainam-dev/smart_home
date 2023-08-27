@@ -99,8 +99,8 @@ class _LoginState extends State<Login> {
                                   delay: 0.8,
                                   child: Image.asset(
                                     'assets/images/logo.png',
-                                    width: 200,
-                                    height: 100,
+                                    width: 300,
+                                    height: 200,
                                   ),
                                 ),
                                 FadeAnimation(

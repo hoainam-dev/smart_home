@@ -4,10 +4,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:workplace/screens/Setting.dart';
+import 'package:workplace/services/UserService.dart';
 
 class Authentication {
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
+    final UserService _userService = UserService();
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     User? user;
 
@@ -30,7 +32,14 @@ class Authentication {
         await auth.signInWithCredential(credential);
 
         user = userCredential.user;
-
+        //create user in firestore
+        await _userService.getUserByEmail(user!.email.toString());
+        if(_userService.user==null){
+          await _firestore
+              .collection("users")
+              .doc(user.uid)
+              .set({'userName': user.displayName, 'email': user.email});
+        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           ScaffoldMessenger.of(context).showSnackBar(

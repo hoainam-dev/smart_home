@@ -4,12 +4,12 @@ import 'package:workplace/utils/authentication.dart';
 import 'package:workplace/widgets/root.dart';
 
 
-class GoogleSignInButton extends StatefulWidget {
+class FacebookSignInButton extends StatefulWidget {
   @override
-  _GoogleSignInButtonState createState() => _GoogleSignInButtonState();
+  _FacebookSignInButtonState createState() => _FacebookSignInButtonState();
 }
 
-class _GoogleSignInButtonState extends State<GoogleSignInButton> {
+class _FacebookSignInButtonState extends State<FacebookSignInButton> {
   bool _isSigningIn = false;
 
   @override
@@ -44,11 +44,11 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/google.png',
+                'assets/images/facebook.png',
                 height: 30,
                 fit: BoxFit.cover,
               ),
-              Text('Login with google')
+              Text('Login with facebook')
             ],
           ),
           style: TextButton.styleFrom(

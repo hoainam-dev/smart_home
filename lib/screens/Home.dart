@@ -101,11 +101,42 @@ class _HomeState extends State<Home> {
         name: "LÒ SƯỞI"),
   ];
 
+  int _value = 0;
 
   // function toggle the light
   void toggleLight(int index) {
     setState(() {
       lights[index].isOn = !lights[index].isOn;
+      _value = index;
+    });
+  }
+
+  bool _showSlider = false;
+
+  List<double> _temps = [0.5, 0.5, 0.5, 0.5];
+
+  void _onLongPress(int index) {
+    setState(() {
+      _showSlider = true;
+      lights[index].isOn = true;
+      _value = index;
+    });
+  }
+
+  void _onLongPressEnd(LongPressEndDetails details) {
+    setState(() {
+      _showSlider = false;
+    });
+  }
+
+  void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
+    // Tính toán giá trị âm lượng dựa trên vị trí y của sự kiện
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    final offset = box.globalToLocal(details.globalPosition);
+    final percent = 1 - (offset.dy / box.size.height).clamp(0.0, 1.0);
+
+    setState(() {
+      _temps[_value] = percent;
     });
   }
 
@@ -164,9 +195,13 @@ class _HomeState extends State<Home> {
                       return LightWidget(
                         isOn: lights[index].isOn,
                         onTap: () => toggleLight(index),
+                        onLongPress: () => _onLongPress(index),
+                        onLongPressEnd: _onLongPressEnd,
+                        onLongPressMoveUpdate: _onLongPressMoveUpdate,
                         iconOn: items[index].iconOn,
                         iconOff: items[index].iconOff,
                         name: items[index].name,
+                        index: _temps[index],
                       );
                     },
                   ),
@@ -212,7 +247,6 @@ class _HomeState extends State<Home> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       );
-
                       return gradient.createShader(
                         Rect.fromLTWH(0, 0, bounds.width, bounds.height),
                       );
@@ -227,6 +261,40 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (_showSlider)
+                      Container(
+                          margin: EdgeInsets.fromLTRB(10, 0, 10, 20),
+                          height: 55,
+                          child: Column(
+                            children: [
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 10,
+                                  overlayShape: RoundSliderOverlayShape(overlayRadius: 15),
+                                ),
+                                child: Slider(
+                                  value: _temps[_value],
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _temps[_value] = newValue;
+                                    });
+                                  },
+                                  min: 0,
+                                  max: 1,
+                                ),
+                              ),
+                              Text(
+                                '${(_temps[_value] * 100).toStringAsFixed(0)}%',
+                                style: TextStyle(fontSize: 20),
+                              )
+                            ],
+                          )
+                      ),
+                  ],
                 ),
               ],
             )),
@@ -312,10 +380,13 @@ class BoxWidget extends StatelessWidget {
 
 class LightWidget extends StatelessWidget {
   final bool isOn;
-  final VoidCallback onTap;
+  final VoidCallback onTap, onLongPress;
+  final GestureLongPressEndCallback onLongPressEnd;
+  final GestureLongPressMoveUpdateCallback onLongPressMoveUpdate;
   final Icon iconOn;
   final Icon iconOff;
   final String name;
+  final double index;
 
   const LightWidget({
     required this.isOn,
@@ -323,12 +394,19 @@ class LightWidget extends StatelessWidget {
     required this.iconOn,
     required this.iconOff,
     required this.name,
+    required this.onLongPress,
+    required this.onLongPressEnd,
+    required this.onLongPressMoveUpdate,
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
+      onLongPressEnd: onLongPressEnd,
+      onLongPressMoveUpdate: onLongPressMoveUpdate,
       child: Container(
           decoration: BoxDecoration(
             gradient: isOn
@@ -374,7 +452,14 @@ class LightWidget extends StatelessWidget {
               ),
               isOn ? iconOn : iconOff,
               SizedBox(height: 10),
-              Text(isOn ? 'ON' : 'OFF'),
+              isOn?Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(isOn ? 'ON' : 'OFF'),
+                  SizedBox(width: 10),
+                  Text("${(index* 100).toStringAsFixed(0)}%"),
+                ],
+              ):Text(isOn ? 'ON' : 'OFF'),
             ],
           )),
     );

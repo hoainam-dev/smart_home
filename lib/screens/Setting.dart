@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workplace/auth/Auth.dart';
 import 'package:workplace/screens/Auth/Login.dart';
+import 'package:workplace/screens/Auth/LoginWithGoogle.dart';
+import 'package:workplace/screens/Profile.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -72,9 +74,11 @@ class _SettingScreenState extends State<SettingScreen> {
                     const _CustomListTile(
                         title: "Help & Feedback",
                         icon: Icons.help_outline_rounded),
-                    const _CustomListTile(
+                    _CustomListTile(
                         title: "About",
-                        icon: Icons.info_outline_rounded),
+                        icon: Icons.info_outline_rounded, onTap: ()=>{
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()))
+                    }),
                     StreamBuilder<User?>(
                         stream: FirebaseAuth.instance.authStateChanges(),
                         builder: (context, snapshot) {
@@ -87,7 +91,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => Login()));
+                                              builder: (context) => LoginWithGoogle()));
                                     });
                           } else {
                             return _CustomListTile(
@@ -97,7 +101,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Login()))
+                                          builder: (context) => LoginWithGoogle()))
                                 });
                           }
                         })
